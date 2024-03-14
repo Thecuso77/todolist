@@ -1,0 +1,37 @@
+version: '3.7'
+networks:
+  default:
+    name: gotodo
+services:
+  db:
+    image: mysql:${MYSQL_VERSION}
+    container_name: todogo_db
+    restart: always
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  frontend:
+    container_name: todogo_frontend
+    build: ./app/frontend
+    ports:
+      - 9000:9000
+    volumes:
+      ## это для внесения правок в файлы напрямую без перезагрузки контейнера
+      - ./app/frontend/:/app/frontend    
+  app:
+    container_name: todogoapp
+    build: ./app
+    ports:
+      - 8180:8080
+    restart: always
+    depends_on:
+      - db
+    environment:
+      MYSQL_URL: db
+    volumes:
+      ## это для внесения правок в файлы напрямую без перезагрузки контейнера
+      - ./app/:/app
+
