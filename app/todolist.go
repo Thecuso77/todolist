@@ -8,7 +8,7 @@ import (
 	"time"
 	"todolist/app/server"
 	"todolist/app/server/controllers"
-	"todolist/app/server/models"
+	"todolist/app/server/db"
 )
 
 type application struct {
@@ -33,9 +33,13 @@ func main() {
 
 	server.InitMySqlDb()
 
+	/*
+	 Если добавить авторизацию и модель пользователя, как она может передаваться к
+	*/
 	app := &application{
 		controller: &controllers.TodoListItemModel{
-			TodoListItem: &models.TodoItemDb{MySqlDB: server.MySqlDB},
+			TodoListItem: &db.TodoItemDb{MySqlDB: server.MySqlDB},
+			Users:        &db.UsersDb{MySqlDB: server.MySqlDB},
 		},
 	}
 
